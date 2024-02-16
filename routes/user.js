@@ -11,3 +11,5 @@ router
   .get(userController.user_get_single)
   .put(userController.user_update)
   .delete(userController.user_delete);
+
+module.exports = router;
