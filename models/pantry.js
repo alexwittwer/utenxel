@@ -15,3 +15,5 @@ const PantrySchema = new mongoose.Schema({
     },
   ],
 });
+
+module.exports = mongoose.model("Pantry", PantrySchema);

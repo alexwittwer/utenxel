@@ -20,7 +20,6 @@ const UserSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Pantry",
-      required: true,
       default: [],
     },
   ],
@@ -32,3 +31,5 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 });
+
+module.exports = mongoose.model("User", UserSchema);

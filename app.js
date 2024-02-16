@@ -28,11 +28,11 @@ app.use(cors());
 app.use(logger("dev"));
 app.use(passport.initialize());
 
-app.use("/users", userRouter);
-app.use("/auth", authRouter);
-app.use("/pantry", pantryRouter);
-app.use("/ingredient", ingredientRouter);
-app.use("/recipe", recipeRouter);
+app.use("/api/users", userRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/pantry", pantryRouter);
+app.use("/api/ingredient", ingredientRouter);
+app.use("/api/recipe", recipeRouter);
 
 // Start the server
 app.listen(port, () => {

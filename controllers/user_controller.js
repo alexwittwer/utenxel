@@ -15,7 +15,7 @@ exports.user_get_all = asyncHandler(async (req, res) => {
     return res.sendStatus(404);
   } catch (err) {
     console.error(err);
-    return res.sendStatus(500);
+    return res.sendStatus(500).json(err);
   }
 });
 
@@ -39,11 +39,7 @@ exports.user_get_single = asyncHandler(async (req, res) => {
 
 exports.user_create = [
   body("name").trim().notEmpty().withMessage("Please enter a name").escape(),
-  body("email")
-    .escape()
-    .notEmpty()
-    .isEmail()
-    .withMessage("Please enter a valid email"),
+  body("email").notEmpty().withMessage("Please enter a valid email").isEmail(),
   asyncHandler(async (req, res) => {
     const errors = validationResult(req);
 
@@ -74,6 +70,7 @@ exports.user_create = [
       await Promise.all([newuser.save(), newuserAuth.save()]);
       return res.status(200).json({ message: "User created successfully" });
     } catch (err) {
+      console.error(err);
       return res.sendStatus(500);
     }
   }),

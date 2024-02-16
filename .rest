@@ -1,0 +1,21 @@
+###
+GET http://localhost:3000/api/users
+###
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "name": "John Deere",
+  "email": "jdiesel@example.com",
+  "password": "password"
+}
+###
+PUT http://api.example.com/api/users/123
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "email": "updatedemail@example.com"
+}
+###
+DELETE http://api.example.com/api/users/123
