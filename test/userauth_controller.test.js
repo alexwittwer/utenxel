@@ -1,27 +1,27 @@
-const UserAuth = require("../models/userauth");
-const User = require("../models/user");
+const request = require("supertest");
+const app = require("../app"); // Assuming your Express app is exported from app.js
+const authController = require("../controllers/auth_controller");
 
-describe("UserAuth Controller", () => {
-  it("should find a user by email and populate the userid field", async () => {
-    const email = "johndoe@example.com";
-    const mockUser = {
-      name: "John Doe",
-      email: "johndoe@example.com",
-      userid: "123",
-    };
-    jest.spyOn(UserAuth, "findOne").mockResolvedValue(mockUser);
-    const populateSpy = jest.spyOn(UserAuth, "populate").mockReturnThis();
-    const execSpy = jest.spyOn(UserAuth, "exec").mockResolvedValue(mockUser);
+describe("Auth Controller", () => {
+  it("should return a 200 status code when logging in with valid credentials", async () => {
+    const response = await request(app).post("/login").send({
+      username: "testuser",
+      password: "testpassword",
+    });
 
-    const user = await UserAuth.findOne({ email }).populate("userid").exec();
-
-    expect(user).toEqual(mockUser);
-    expect(UserAuth.findOne).toHaveBeenCalledWith({ email });
-    expect(populateSpy).toHaveBeenCalledWith("userid");
-    expect(execSpy).toHaveBeenCalledTimes(1);
-
-    UserAuth.findOne.mockRestore();
-    populateSpy.mockRestore();
-    execSpy.mockRestore();
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("token");
   });
+
+  it("should return a 401 status code when logging in with invalid credentials", async () => {
+    const response = await request(app).post("/login").send({
+      username: "testuser",
+      password: "wrongpassword",
+    });
+
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toHaveProperty("error");
+  });
+
+  // Add more test cases for other endpoints and scenarios as needed
 });
