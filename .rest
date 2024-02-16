@@ -6,16 +6,86 @@ Content-Type: application/json
 
 {
   "name": "John Deere",
-  "email": "jdiesel@example.com",
+  "email": "jdi5@example.com",
   "password": "password"
 }
 ###
-PUT http://api.example.com/api/users/123
+
+PUT http://localhost:3000/api/users/65cff0b2c52b298108301688
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpkaTVAZXhhbXBsZS5jb20iLCJ1c2VyIjp7Il9pZCI6IjY1Y2ZmMDUyYzUyYjI5ODEwODMwMTY3YiIsInBhc3N3b3JkIjoiJDJiJDEwJDR3MXVyTjNsa20vdktFOUZienliZi42bG9ZbGxjU1BJai5Id29kTjI5amguUmsuaEpRN2hPIiwiZW1haWwiOiJqZGk1QGV4YW1wbGUuY29tIiwidXNlcmlkIjoiNjVjZmYwNTJjNTJiMjk4MTA4MzAxNjdhIiwiaXNBZG1pbiI6ZmFsc2UsIl9fdiI6MH0sImlhdCI6MTcwODEyNjI5OX0.39aGMMd9nw6_FVC5MG24RQ6D9VyV53tlFsZTXAniEfA
+
+{
+    "name": "John Dore",
+}
+###
+DELETE http://localhost:3000/api/users/65cfd9dc029b9edffb1ab9e6
+###
+
+GET http://localhost:3000/api/pantry
+
+###
+
+GET http://localhost:3000/api/pantry/124214123
+
+###
+
+PUT http://localhost:3000/api/pantry/124124124124
 Content-Type: application/json
 
 {
-  "name": "Updated Name",
-  "email": "updatedemail@example.com"
+    "item": "Milk",
+    "quantity": 2
 }
 ###
-DELETE http://api.example.com/api/users/123
+
+POST http://localhost:3000/api/pantry
+Content-Type: application/json
+
+{
+    "item": "Bread",
+    "quantity": 1
+}
+###
+
+DELETE http://localhost:3000/api/pantry/1241241243
+###
+
+GET http://localhost:3000/api/recipe
+###
+
+GET http://localhost:3000/api/recipe/123412341234
+
+###
+
+POST http://localhost:3000/api/recipe
+Content-Type: application/json
+
+{
+    "name": "New Recipe",
+    "ingredients": ["ingredient1", "ingredient2"],
+    "instructions": "Step 1, Step 2, Step 3"
+}
+###
+
+PUT http://localhost:3000/api/recipe/{recipeId}
+Content-Type: application/json
+
+{
+    "name": "Updated Recipe",
+    "ingredients": ["ingredient1", "ingredient2", "ingredient3"],
+    "instructions": "Step 1, Step 2, Step 3, Step 4"
+}
+###
+
+DELETE http://localhost:3000/api/recipe/{recipeId}
+###
+
+
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "jdi5@example.com",
+  "password": "password"
+}

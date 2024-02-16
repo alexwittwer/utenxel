@@ -8,6 +8,7 @@ router
   .post(pantryController.pantry_create);
 router
   .route("/:pantryid")
+  .get(pantryController.pantry_get_single)
   .put(pantryController.pantry_update)
   .delete(pantryController.pantry_delete);
 

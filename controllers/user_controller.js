@@ -64,6 +64,7 @@ exports.user_create = [
 
       const newuserAuth = new UserAuth({
         password: req.body.password,
+        email: req.body.email,
         userid: newuser.id,
       });
 

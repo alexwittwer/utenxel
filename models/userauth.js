@@ -7,6 +7,11 @@ const UserAuthSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   userid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

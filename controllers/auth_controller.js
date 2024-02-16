@@ -28,6 +28,7 @@ exports.login = asyncHandler(async (req, res) => {
       user,
     });
   } catch (err) {
+    console.error(err);
     return res.sendStatus(500);
   }
 });
