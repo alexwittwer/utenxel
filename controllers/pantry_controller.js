@@ -6,7 +6,12 @@ const Ingredient = require("../models/ingredient");
 
 exports.pantry_get_all = asyncHandler(async (req, res) => {
   try {
-    const allPantry = await Pantry.find().populate().exec();
+    const allPantry = await Pantry.find()
+      .populate({
+        path: "ingredients",
+        select: "name description type -_id",
+      })
+      .populate({ path: "user", select: "name -_id" });
 
     if (allPantry != null) {
       return res.status(200).json(allPantry);
@@ -41,7 +46,12 @@ exports.pantry_add = [
   asyncHandler(async (req, res) => {
     try {
       const ingredient = await Ingredient.find({ name: req.body.name }).exec();
-      const pantry = await Pantry.findOne({ user: req.params.userid }).exec();
+      const pantry = await Pantry.findOne({ user: req.params.userid }).populate(
+        {
+          path: "ingredients",
+          select: "name description -_id",
+        }
+      );
 
       if (!ingredient) {
         console.error({ message: "Ingredient not found" });

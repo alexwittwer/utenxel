@@ -24,8 +24,14 @@ exports.user_get_all = asyncHandler(async (req, res) => {
 exports.user_get_single = asyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.params.userid)
-      .populate("pantry")
-      .exec();
+      .populate({
+        path: "pantry",
+        populate: { path: "ingredients", select: "name" },
+      })
+      .populate({
+        path: "savedRecipes",
+        select: "name",
+      });
 
     if (!user) {
       return res.sendStatus(404);
@@ -131,8 +137,9 @@ exports.user_delete = [
         return res.sendStatus(400);
       }
 
-      // protects comments from other user deleting or updating them
-      if (user.email !== req.user.email) {
+      // protects unauthorized users from deleting other users
+      if (!req.user.user.isAdmin && user.email !== req.user.user.email) {
+        console.warn({ user: req.user.user, target: user.email });
         return res.sendStatus(403);
       }
 
