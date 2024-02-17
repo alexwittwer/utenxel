@@ -1,13 +1,11 @@
 const express = require("express");
 const supertest = require("supertest");
 const mongoose = require("mongoose");
-const mongoose = require("mongoose");
-const authRouter = require("./routes/auth");
-const userRouter = require("./routes/user");
-const pantryRouter = require("./routes/pantry");
-const ingredientRouter = require("./routes/ingredient");
-const recipeRouter = require("./routes/recipe");
-const express = require("express");
+const authRouter = require("../routes/auth");
+const userRouter = require("../routes/user");
+const pantryRouter = require("../routes/pantry");
+const ingredientRouter = require("../routes/ingredient");
+const recipeRouter = require("../routes/recipe");
 const cors = require("cors");
 const passport = require("passport");
 const logger = require("morgan");
@@ -20,14 +18,11 @@ mongoose.connect("mongodb://localhost/test", {
   useUnifiedTopology: true,
 });
 
-// Define your routes here
-app.get("/", (req, res) => {
-  res.send("Hello, world!");
-});
-
-// Export the app for testing
-module.exports = app;
-const port = 8080;
+app.use("/api/users", userRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/users/:userid/pantry", pantryRouter);
+app.use("/api/ingredients", ingredientRouter);
+app.use("/api/recipes", recipeRouter);
 
 const mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB);
@@ -50,4 +45,10 @@ app.use("/pantry", pantryRouter);
 app.use("/ingredient", ingredientRouter);
 app.use("/recipe", recipeRouter);
 
+// Export the app for testing
 module.exports = app;
+
+// Start the server
+app.listen(8080, () => {
+  console.log("Server is running on port 8080");
+});
