@@ -40,16 +40,20 @@ exports.pantry_add = [
   passport.authenticate("jwt", { session: false }),
   asyncHandler(async (req, res) => {
     try {
-      const ingredient = await Ingredient.findById(
-        req.params.ingredientid
-      ).exec();
-      const pantry = await Pantry.findOne({ user: req.user._id }).exec();
+      const ingredient = await Ingredient.find({ name: req.body.name }).exec();
+      const pantry = await Pantry.findOne({ user: req.params.userid }).exec();
 
-      if (!ingredient || !pantry) {
+      if (!ingredient) {
+        console.error({ message: "Ingredient not found" });
         return res.sendStatus(404);
       }
 
-      pantry.ingredients.push(ingredient);
+      if (!pantry) {
+        console.error({ message: "User not found" });
+        return res.sendStatus(404);
+      }
+
+      pantry.ingredients.push(...ingredient);
       await pantry.save();
       return res.status(201).json(pantry);
     } catch (err) {

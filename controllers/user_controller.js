@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const UserAuth = require("../models/userauth");
 const passport = require("passport");
+const Pantry = require("../models/pantry");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
@@ -21,7 +22,9 @@ exports.user_get_all = asyncHandler(async (req, res) => {
 
 exports.user_get_single = asyncHandler(async (req, res) => {
   try {
-    const user = await User.findById(req.params.userid).populate().exec();
+    const user = await User.findById(req.params.userid)
+      .populate("pantry")
+      .exec();
 
     if (!user) {
       return res.sendStatus(404);
@@ -65,7 +68,13 @@ exports.user_create = [
         userid: newuser.id,
       });
 
-      await Promise.all([newuser.save(), newuserAuth.save()]);
+      const pantry = new Pantry({
+        user: newuser._id,
+      });
+
+      newuser.pantry = pantry;
+
+      await Promise.all([newuser.save(), pantry.save(), newuserAuth.save()]);
       return res.status(200).json({ message: "User created successfully" });
     } catch (err) {
       console.error(err);
@@ -91,7 +100,10 @@ exports.user_update = [
         return res.sendStatus(403);
       }
 
+      const newPantry = await Pantry.create();
+
       user.name = req.body.name || user.name;
+      user.pantry = user.pantry || newPantry;
 
       await user.save();
       return res.status(200).json(user);

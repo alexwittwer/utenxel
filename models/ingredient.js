@@ -8,15 +8,27 @@ const ingredientSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["protein", "spice", "staple", "special", "other"],
+    enum: [
+      "protein",
+      "vegetable",
+      "fruit",
+      "spice",
+      "staple",
+      "special",
+      "other",
+    ],
     default: "other",
     required: true,
   },
-  usedIn: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Recipe",
-    required: true,
+  description: {
+    type: String,
   },
+  usedIn: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Recipe",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Ingredient", ingredientSchema);

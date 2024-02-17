@@ -44,6 +44,7 @@ exports.ingredient_create = asyncHandler(async (req, res) => {
     const newIngredient = new Ingredient({
       name: req.body.name,
       type: req.body.type,
+      description: req.body.description || "",
     });
 
     await newIngredient.save();
@@ -70,6 +71,7 @@ exports.ingredient_update = [
 
       ingredient.name = req.body.name || ingredient.name;
       ingredient.type = req.body.type || ingredient.type;
+      ingredient.description = req.body.description || ingredient.description;
 
       await ingredient.save();
       return res.status(200).json(ingredient);

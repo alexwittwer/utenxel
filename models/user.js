@@ -16,13 +16,11 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  pantry: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Pantry",
-      default: [],
-    },
-  ],
+  pantry: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Pantry",
+    required: true,
+  },
   savedRecipes: [
     {
       type: mongoose.Schema.Types.ObjectId,
