@@ -67,19 +67,24 @@ exports.pantry_delete = [
   passport.authenticate("jwt", { session: false }),
   asyncHandler(async (req, res) => {
     try {
-      const pantry = await Pantry.findOne({ user: req.user._id })
-        .populate()
+      const pantry = await Pantry.findOne({ user: req.params.userid })
+        .populate("ingredients")
         .exec();
-      const ingredient = await Ingredient.findById(
-        req.params.ingredientid
-      ).exec();
+      const ingredient = await Ingredient.findOne({
+        name: req.body.name,
+      }).exec();
 
       if (!pantry) {
+        console.error({ message: "Pantry not found" });
         return res.sendStatus(404);
       }
 
+      if (!ingredient) {
+        console.error({ message: "Ingredient not found" });
+      }
+
       pantry.ingredients = pantry.ingredients.filter(
-        (ingredient) => req.params.ingredientid !== ingredient._id
+        (ingredient) => req.body.name !== ingredient.name
       );
 
       await pantry.save();
