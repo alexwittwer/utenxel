@@ -21,10 +21,7 @@ exports.user_get_all = asyncHandler(async (req, res) => {
 
 exports.user_get_single = asyncHandler(async (req, res) => {
   try {
-    const user = await User.findById(req.params.userid)
-      .populate({})
-      .populate({})
-      .exec();
+    const user = await User.findById(req.params.userid).populate().exec();
 
     if (!user) {
       return res.sendStatus(404);
@@ -85,10 +82,12 @@ exports.user_update = [
       const user = await User.findById(req.params.userid);
 
       if (!user) {
+        console.warn("User not found");
         return res.status(404).json({ message: "User not found" });
       }
       // protects comments from other user deleting or updating them
       if (user.email !== req.user.email) {
+        console.warn("Unauthorized");
         return res.sendStatus(403);
       }
 
@@ -97,6 +96,7 @@ exports.user_update = [
       await user.save();
       return res.status(200).json(user);
     } catch (err) {
+      console.error(err);
       return res.status(500).json(err);
     }
   }),

@@ -1,6 +1,9 @@
 ###
 GET http://localhost:3000/api/users
 ###
+
+GET http://localhost:3000/api/users/65cff0b2c52b298108301688
+###
 POST http://localhost:3000/api/users
 Content-Type: application/json
 
@@ -11,22 +14,23 @@ Content-Type: application/json
 }
 ###
 
-PUT http://localhost:3000/api/users/65cff0b2c52b298108301688
+PATCH http://localhost:3000/api/users/65cff0b2c52b298108301688
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpkaTVAZXhhbXBsZS5jb20iLCJ1c2VyIjp7Il9pZCI6IjY1Y2ZmMDUyYzUyYjI5ODEwODMwMTY3YiIsInBhc3N3b3JkIjoiJDJiJDEwJDR3MXVyTjNsa20vdktFOUZienliZi42bG9ZbGxjU1BJai5Id29kTjI5amguUmsuaEpRN2hPIiwiZW1haWwiOiJqZGk1QGV4YW1wbGUuY29tIiwidXNlcmlkIjoiNjVjZmYwNTJjNTJiMjk4MTA4MzAxNjdhIiwiaXNBZG1pbiI6ZmFsc2UsIl9fdiI6MH0sImlhdCI6MTcwODEyNjI5OX0.39aGMMd9nw6_FVC5MG24RQ6D9VyV53tlFsZTXAniEfA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpkaTVAZXhhbXBsZS5jb20iLCJ1c2VyIjp7Il9pZCI6IjY1Y2ZmMGIyYzUyYjI5ODEwODMwMTY4OSIsInBhc3N3b3JkIjoiJDJiJDEwJEZFSDg0V2FKL2FKU3FLOUh4ZnhMZk90eDFRL0hVV3hkUEFERDRjdENUM0VScnpiU0puRDhxIiwiZW1haWwiOiJqZGk1QGV4YW1wbGUuY29tIiwidXNlcmlkIjoiNjVjZmYwYjJjNTJiMjk4MTA4MzAxNjg4IiwiaXNBZG1pbiI6ZmFsc2UsIl9fdiI6MH0sImlhdCI6MTcwODEyNzg3OX0.QNAF7ECzFkBH9BwKlUMeBMKL2Vqj_AZ2q22mstF8z8A
 
 {
-    "name": "John Dore",
+    "name": "John Deere"
 }
+
 ###
 DELETE http://localhost:3000/api/users/65cfd9dc029b9edffb1ab9e6
 ###
 
-GET http://localhost:3000/api/pantry
+GET http://localhost:3000/api/users/65cff0b2c52b298108301688/pantry
 
 ###
 
-GET http://localhost:3000/api/pantry/124214123
+GET http://localhost:3000/api/pantry/users/pantry/124214123
 
 ###
 

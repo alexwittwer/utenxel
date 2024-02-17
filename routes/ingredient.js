@@ -9,7 +9,7 @@ router
 router
   .route("/:ingredientid")
   .get(ingredientController.ingredient_get_single)
-  .put(ingredientController.ingredient_update)
+  .patch(ingredientController.ingredient_update)
   .delete(ingredientController.ingredient_delete);
 
 module.exports = router;

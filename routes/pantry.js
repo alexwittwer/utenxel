@@ -9,7 +9,7 @@ router
 router
   .route("/:pantryid")
   .get(pantryController.pantry_get_single)
-  .put(pantryController.pantry_update)
+  .patch(pantryController.pantry_update)
   .delete(pantryController.pantry_delete);
 
 module.exports = router;

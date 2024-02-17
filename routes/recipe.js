@@ -9,7 +9,7 @@ router
 router
   .route("/:recipeid")
   .get(recipeController.recipe_get_single)
-  .put(recipeController.recipe_update)
+  .patch(recipeController.recipe_update)
   .delete(recipeController.recipe_delete);
 
 module.exports = router;

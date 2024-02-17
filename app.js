@@ -6,7 +6,6 @@ const ingredientRouter = require("./routes/ingredient");
 const recipeRouter = require("./routes/recipe");
 const express = require("express");
 const cors = require("cors");
-const passport = require("passport");
 const logger = require("morgan");
 
 const port = 3000 || process.env.PORT;
@@ -26,13 +25,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(logger("dev"));
-app.use(passport.initialize());
 
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/pantry", pantryRouter);
-app.use("/api/ingredient", ingredientRouter);
-app.use("/api/recipe", recipeRouter);
+app.use("/api/users/:userid/pantry", pantryRouter);
+app.use("/api/ingredients", ingredientRouter);
+app.use("/api/recipes", recipeRouter);
 
 // Start the server
 app.listen(port, () => {
