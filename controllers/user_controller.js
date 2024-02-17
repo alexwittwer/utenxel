@@ -2,6 +2,7 @@ const User = require("../models/user");
 const UserAuth = require("../models/userauth");
 const passport = require("passport");
 const Pantry = require("../models/pantry");
+const Recipe = require("../models/recipe");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
@@ -101,6 +102,12 @@ exports.user_update = [
       }
 
       const newPantry = await Pantry.create();
+
+      const newSavedRecipe = await Recipe.findOne({ id: req.body.recipeid });
+
+      if (newSavedRecipe) {
+        user.savedRecipes.push(newSavedRecipe);
+      }
 
       user.name = req.body.name || user.name;
       user.pantry = user.pantry || newPantry;

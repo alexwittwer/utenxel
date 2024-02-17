@@ -36,75 +36,91 @@ exports.recipe_get_single = asyncHandler(async (req, res) => {
   }
 });
 
-exports.recipe_create = asyncHandler(async (req, res) => {
-  try {
-    const ingredientNames = req.body.ingredients;
-    const ingredientObjects = await Promise.all(
-      ingredientNames.map(async (name) => {
-        const ingredient = await Ingredient.findOne({ name });
+exports.recipe_create = [
+  passport.authenticate("jwt", { session: false }),
+  asyncHandler(async (req, res) => {
+    try {
+      if (!req.user.user.isAdmin) {
+        return res.sendStatus(403);
+      }
 
-        if (!ingredient) {
-          console.error({ message: "Ingredient not found" });
-          return res.sendStatus(404);
-        }
-        return ingredient;
-      })
-    );
+      const ingredientNames = req.body.ingredients;
+      const ingredientObjects = await Promise.all(
+        ingredientNames.map(async (name) => {
+          const ingredient = await Ingredient.findOne({ name });
 
-    const newRecipe = new Recipe({
-      name: req.body.name,
-      ingredients: ingredientObjects,
-      category: req.body.category,
-      instructions: req.body.instructions,
-      servings: req.body.servings,
-      time: req.body.time,
-    });
+          if (!ingredient) {
+            console.error({ message: "Ingredient not found" });
+            return res.sendStatus(404);
+          }
+          return ingredient;
+        })
+      );
 
-    await newRecipe.save();
-    return res.sendStatus(201);
-  } catch (err) {
-    console.error(err);
-    return res.sendStatus(500);
-  }
-});
-exports.recipe_update = asyncHandler(async (req, res) => {
-  try {
-    const recipe = await Recipe.findById(req.params.recipeid);
+      const newRecipe = new Recipe({
+        name: req.body.name,
+        ingredients: ingredientObjects,
+        category: req.body.category,
+        instructions: req.body.instructions,
+        servings: req.body.servings,
+        time: req.body.time,
+      });
 
-    const ingredientNames = req.body.ingredients;
-    const ingredientObjects = await Promise.all(
-      ingredientNames.map(async (name) => {
-        const ingredient = await Ingredient.findOne({ name });
+      await newRecipe.save();
+      return res.sendStatus(201);
+    } catch (err) {
+      console.error(err);
+      return res.sendStatus(500);
+    }
+  }),
+];
 
-        if (!ingredient) {
-          console.error({ message: "Ingredient not found" });
-          return res.sendStatus(404);
-        }
-        return ingredient;
-      })
-    );
-
-    if (!recipe) {
-      return res.sendStatus(404);
+exports.recipe_update = [
+  passport.authenticate("jwt", { session: false }),
+  asyncHandler(async (req, res) => {
+    if (!req.user.user.isAdmin) {
+      return res.sendStatus(403);
     }
 
-    recipe.name = req.body.name || recipe.name;
-    recipe.ingredients = ingredientObjects
-      ? ingredientObjects
-      : recipe.ingredients;
-    recipe.category = req.body.category || recipe.category;
-    recipe.instructions = req.body.instructions || recipe.instructions;
-    recipe.servings = req.body.servings || recipe.servings;
-    recipe.time = req.body.time || recipe.time;
-    recipe.favorites = req.body.favorites || recipe.favorites;
+    try {
+      const recipe = await Recipe.findById(req.params.recipeid);
 
-    await recipe.save();
-    return res.sendStatus(204);
-  } catch (err) {
-    console.error(err);
-    return res.sendStatus(500);
-  }
-});
+      const ingredientNames = req.body.ingredients;
+      const ingredientObjects = await Promise.all(
+        ingredientNames.map(async (name) => {
+          const ingredient = await Ingredient.findOne({ name });
+
+          if (!ingredient) {
+            console.error({ message: "Ingredient not found" });
+            return res.sendStatus(404);
+          }
+          return ingredient;
+        })
+      );
+
+      if (!recipe) {
+        return res.sendStatus(404);
+      }
+
+      recipe.name = req.body.name || recipe.name;
+      recipe.ingredients = ingredientObjects
+        ? ingredientObjects
+        : recipe.ingredients;
+      recipe.category = req.body.category || recipe.category;
+      recipe.instructions = req.body.instructions || recipe.instructions;
+      recipe.servings = req.body.servings || recipe.servings;
+      recipe.time = req.body.time || recipe.time;
+      recipe.favorites = req.body.favorites || recipe.favorites;
+
+      await recipe.save();
+      return res.sendStatus(204);
+    } catch (err) {
+      console.error(err);
+      return res.sendStatus(500);
+    }
+  }),
+];
+
 exports.recipe_delete = asyncHandler(async (req, res) => {
   const recipe = await Recipe.findByIdAndDelete(req.params.recipeid);
 
