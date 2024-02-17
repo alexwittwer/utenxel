@@ -35,6 +35,7 @@ exports.recipe_get_single = asyncHandler(async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
 exports.recipe_create = asyncHandler(async (req, res) => {
   return res.json({ message: "This is the recipe_create controller" });
 });

@@ -1,9 +1,9 @@
-const User = require("../models/user");
-const Ingredient = require("../models/ingredient");
 const { body, validationResult } = require("express-validator");
 const passport = require("passport");
 const asyncHandler = require("express-async-handler");
 const Pantry = require("../models/pantry");
+const User = require("../models/user");
+const Ingredient = require("../models/ingredient");
 
 exports.pantry_get_all = asyncHandler(async (req, res) => {
   try {
@@ -20,27 +20,50 @@ exports.pantry_get_all = asyncHandler(async (req, res) => {
   }
 });
 
+// not needed
 exports.pantry_get_single = asyncHandler(async (req, res) => {
-  try {
-    const pantry = await Pantry.findById(req.params.pantryid).exec();
+  return res.status(400).json({ message: "Bad request" });
+});
 
-    if (!pantry) {
+exports.pantry_add = asyncHandler(async (req, res) => {
+  try {
+    const ingredient = await Ingredient.findById(
+      req.params.ingredientid
+    ).exec();
+    const pantry = await Pantry.findOne({ user: req.user._id }).exec();
+
+    if (!ingredient || !pantry) {
       return res.sendStatus(404);
     }
 
-    return res.status(200).json(pantry);
+    pantry.ingredients.push(ingredient);
+    await pantry.save();
+    return res.status(201).json(pantry);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
   }
 });
 
-exports.pantry_create = asyncHandler(async (req, res) => {});
-
-exports.pantry_update = asyncHandler(async (req, res) => {
-  return res.json({ message: "This is the pantry_update controller" });
-});
-
 exports.pantry_delete = asyncHandler(async (req, res) => {
-  return res.json({ message: "This is the pantry_delete controller" });
+  try {
+    const pantry = await Pantry.findOne({ user: req.user._id }).exec();
+    const ingredient = await Ingredient.findById(
+      req.params.ingredientid
+    ).exec();
+
+    if (!pantry) {
+      return res.sendStatus(404);
+    }
+
+    pantry.ingredients = pantry.ingredients.filter(
+      (ingredient) => req.params.ingredientid !== ingredient._id
+    );
+
+    await pantry.save();
+    return res.status(200).json(pantry);
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
 });

@@ -17,10 +17,6 @@ const ingredientSchema = new mongoose.Schema({
     ref: "Recipe",
     required: true,
   },
-  quantity: {
-    type: Number,
-    required: true,
-  },
 });
 
 module.exports = mongoose.model("Ingredient", ingredientSchema);
