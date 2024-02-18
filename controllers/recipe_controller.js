@@ -66,6 +66,11 @@ exports.recipe_create = [
         time: req.body.time,
       });
 
+      ingredientObjects.forEach(async (ingredient) => {
+        ingredient.usedIn.push(newRecipe);
+        await ingredient.save();
+      });
+
       await newRecipe.save();
       return res.sendStatus(201);
     } catch (err) {

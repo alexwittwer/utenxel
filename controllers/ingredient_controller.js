@@ -42,11 +42,16 @@ exports.ingredient_get_single = asyncHandler(async (req, res) => {
 exports.ingredient_create = [
   body("name").trim().notEmpty().withMessage("Please enter a name").escape(),
   body("type").trim().notEmpty().withMessage("Please enter a type").escape(),
+  passport.authenticate("jwt", { session: false }),
   asyncHandler(async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
+    }
+
+    if (!req.user.user.isAdmin) {
+      return res.sendStatus(403);
     }
 
     try {
@@ -75,18 +80,27 @@ exports.ingredient_create = [
 exports.ingredient_update = [
   body("name").trim().notEmpty().withMessage("Please enter a name").escape(),
   body("type").trim().notEmpty().withMessage("Please enter a type").escape(),
-
+  passport.authenticate("jwt", { session: false }),
   asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
+      console.log(req.user);
+      if (!req.user.user.isAdmin) {
+        return res.sendStatus(403);
+      }
+
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const ingredient = await Ingredient.findById(
-        req.params.ingredientid
-      ).exec();
+      const ingredient = await Ingredient.findById(req.params.ingredientid);
 
       if (!ingredient) {
         return res.sendStatus(404);
@@ -105,19 +119,26 @@ exports.ingredient_update = [
   }),
 ];
 
-exports.ingredient_delete = asyncHandler(async (req, res) => {
-  try {
-    const ingredient = await Ingredient.findByIdAndDelete(
-      req.params.ingredientid
-    ).exec();
-
-    if (!ingredient) {
-      return res.sendStatus(404);
+exports.ingredient_delete = [
+  passport.authenticate("jwt", { session: false }),
+  asyncHandler(async (req, res) => {
+    if (!req.user.user.isAdmin) {
+      return res.sendStatus(403);
     }
 
-    return res.status(200).json({ message: "Ingredient deleted" });
-  } catch (err) {
-    console.error(err);
-    return res.sendStatus(500);
-  }
-});
+    try {
+      const ingredient = await Ingredient.findByIdAndDelete(
+        req.params.ingredientid
+      ).exec();
+
+      if (!ingredient) {
+        return res.sendStatus(404);
+      }
+
+      return res.status(200).json({ message: "Ingredient deleted" });
+    } catch (err) {
+      console.error(err);
+      return res.sendStatus(500);
+    }
+  }),
+];
