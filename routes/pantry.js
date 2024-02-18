@@ -4,7 +4,7 @@ const pantryController = require("../controllers/pantry_controller");
 
 router
   .route("/")
-  .get(pantryController.pantry_get_all)
+  .get(pantryController.pantry_get_single)
   .post(pantryController.pantry_add)
   .delete(pantryController.pantry_delete);
 

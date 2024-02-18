@@ -28,7 +28,7 @@ app.use(logger("dev"));
 
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/users/:userid/pantry", pantryRouter);
+app.use("/api/pantry", pantryRouter);
 app.use("/api/ingredients", ingredientRouter);
 app.use("/api/recipes", recipeRouter);
 
