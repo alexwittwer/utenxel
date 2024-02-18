@@ -9,16 +9,27 @@ const Pantry = require("../models/pantry");
 
 exports.ingredient_get_all = asyncHandler(async (req, res) => {
   try {
-    const allIngredients = await Ingredient.find().populate({
-      path: "usedIn",
-      select: "name",
-    });
+    const query = req.query;
 
-    if (!allIngredients) {
-      return res.sendStatus(404);
+    if (query.name) {
+      const normalizedName =
+        query.name.charAt(0).toUpperCase() + query.name.slice(1);
+      const ingredients = await Ingredient.find({
+        name: { $regex: normalizedName },
+      }).populate({
+        path: "usedIn",
+        select: "name",
+      });
+
+      if (!ingredients) {
+        return res.sendStatus(404);
+      }
+
+      return res.status(200).json(ingredients);
+    } else {
+      const ingredients = await Ingredient.find().exec();
+      return res.status(200).json(ingredients);
     }
-
-    return res.status(200).json(allIngredients);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
