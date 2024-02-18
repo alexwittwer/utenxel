@@ -9,7 +9,10 @@ const Pantry = require("../models/pantry");
 
 exports.ingredient_get_all = asyncHandler(async (req, res) => {
   try {
-    const allIngredients = await Ingredient.find().exec();
+    const allIngredients = await Ingredient.find().populate({
+      path: "usedIn",
+      select: "name",
+    });
 
     if (!allIngredients) {
       return res.sendStatus(404);

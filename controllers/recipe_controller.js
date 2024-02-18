@@ -21,9 +21,10 @@ exports.recipe_get_all = asyncHandler(async (req, res) => {
 
 exports.recipe_get_single = asyncHandler(async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.recipeid).populate(
-      "ingredients"
-    );
+    const recipe = await Recipe.findById(req.params.recipeid).populate({
+      path: "ingredients",
+      select: "name -_id",
+    });
 
     if (!recipe) {
       return res.sendStatus(404);
