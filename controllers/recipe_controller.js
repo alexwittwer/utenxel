@@ -148,12 +148,24 @@ exports.recipe_update = [
   }),
 ];
 
-exports.recipe_delete = asyncHandler(async (req, res) => {
-  const recipe = await Recipe.findByIdAndDelete(req.params.recipeid);
+exports.recipe_delete = [
+  passport.authenticate("jwt", { session: false }),
+  asyncHandler(async (req, res) => {
+    if (!req.user.user.isAdmin) {
+      return res.sendStatus(403);
+    }
 
-  if (!recipe) {
-    return res.sendStatus(404);
-  }
+    try {
+      const recipe = await Recipe.findByIdAndDelete(req.params.recipeid);
 
-  return res.sendStatus(204);
-});
+      if (!recipe) {
+        return res.sendStatus(404);
+      }
+
+      return res.sendStatus(204);
+    } catch (err) {
+      console.error(err);
+      return res.sendStatus(500);
+    }
+  }),
+];
