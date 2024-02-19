@@ -18,7 +18,15 @@ The goal of this backend API is to provide a dynamic front-end experience for us
 
 - Finding recipes based on pantry items: Users can search for recipes that can be made with the ingredients they have in their pantry.
 
-- Percentage match: The API calculates a percentage match for each recipe based on the ingredients in the user's pantry. This helps users find recipes that closely match their available ingredients.
+- Search for ingredients or recipes using the query parameters. 
+
+- For the /api/recipes endpoint, the following queries are acceptable: name, category, limit
+
+- http://localhost:3000/api/recipes/?name=onion&category=vegan&limit=20
+
+- For the /api/ingredients endpoint, the following queries are acceptable: name, type, limit
+
+- http://localhost:3000/api/ingredients/?name=flour&type=staple&limit=50
 
 ## Getting Started
 
