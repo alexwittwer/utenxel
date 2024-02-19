@@ -86,6 +86,7 @@ exports.recipe_create = [
         instructions: req.body.instructions,
         servings: req.body.servings,
         time: req.body.time,
+        postedBy: req.user.user._id,
       });
 
       ingredientObjects.forEach(async (ingredient) => {

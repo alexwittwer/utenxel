@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Ingredient = require("./ingredient");
+const User = require("./user");
 
 const recipeSchema = new mongoose.Schema({
   name: {
@@ -33,6 +34,18 @@ const recipeSchema = new mongoose.Schema({
   favorites: {
     type: Number,
     default: 0,
+  },
+  published: {
+    type: Boolean,
+    default: false,
+  },
+  postedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
