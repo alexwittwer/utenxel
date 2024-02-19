@@ -5,14 +5,35 @@ const passport = require("passport");
 const asyncHandler = require("express-async-handler");
 
 exports.recipe_get_all = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 20, name = "", category = "" } = req.query;
+  const count = await Recipe.countDocuments();
   try {
-    const allRecipes = await Recipe.find();
+    const allRecipes = await Recipe.find({
+      name: new RegExp(name, "i"),
+      category: new RegExp(category, "i"),
+    })
+      .populate({
+        path: "ingredients",
+        select: "name -_id",
+      })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
 
     if (!allRecipes) {
       return res.sendStatus(404);
     }
 
-    return res.status(200).json(allRecipes);
+    return res.status(200).json({
+      results: allRecipes,
+      count: count,
+      next:
+        `http://localhost:3000/api/recipes/?${
+          page && "page=" + (parseInt(page) + 1)
+        }` +
+        `${limit && "&limit=" + limit}` +
+        `${name && "&name=" + name}` +
+        `${category && "&category=" + category}`,
+    });
   } catch (err) {
     console.error(err);
     return res.sendStatus(500).json(err);
