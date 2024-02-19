@@ -3,6 +3,8 @@ const passport = require("passport");
 const asyncHandler = require("express-async-handler");
 const Ingredient = require("../models/ingredient");
 
+const url = "http://localhost:3000/api/ingredients/?page=";
+
 exports.ingredient_get_all = asyncHandler(async (req, res) => {
   try {
     const count = await Ingredient.countDocuments();
@@ -29,12 +31,22 @@ exports.ingredient_get_all = asyncHandler(async (req, res) => {
       return res.status(200).json({
         results: ingredients,
         count: count,
+        next:
+          `${url}${parseInt(page) + 1}` +
+          `${limit && "&limit=" + limit}` +
+          `${name && "&name=" + name}` +
+          `${type && "&type=" + type}`,
       });
     } else {
       const ingredients = await Ingredient.find().exec();
       return res.status(200).json({
         results: ingredients,
         count: count,
+        next:
+          `${url}${parseInt(page) + 1}` +
+          `${limit && "&limit=" + limit}` +
+          `${name && "&name=" + name}` +
+          `${type && "&type=" + type}`,
       });
     }
   } catch (err) {
