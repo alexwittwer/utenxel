@@ -2,33 +2,40 @@ const { body, validationResult } = require("express-validator");
 const passport = require("passport");
 const asyncHandler = require("express-async-handler");
 const Ingredient = require("../models/ingredient");
-const User = require("../models/user");
-const UserAuth = require("../models/userauth");
-const Recipe = require("../models/recipe");
-const Pantry = require("../models/pantry");
 
 exports.ingredient_get_all = asyncHandler(async (req, res) => {
   try {
-    const query = req.query;
+    const count = await Ingredient.countDocuments();
 
-    if (query.name) {
-      const normalizedName =
-        query.name.charAt(0).toUpperCase() + query.name.slice(1);
+    const { page = 1, name = "", type = "", limit = 20 } = req.query;
+
+    if (name || type || limit) {
       const ingredients = await Ingredient.find({
-        name: { $regex: normalizedName },
-      }).populate({
-        path: "usedIn",
-        select: "name",
-      });
+        name: new RegExp(name, "i"),
+        type: new RegExp(type, "i"),
+      })
+        .populate({
+          path: "usedIn",
+          select: "name",
+        })
+        .limit(limit)
+        .skip((page - 1) * limit)
+        .sort({ asc: 1 });
 
       if (!ingredients) {
         return res.sendStatus(404);
       }
 
-      return res.status(200).json(ingredients);
+      return res.status(200).json({
+        results: ingredients,
+        count: count,
+      });
     } else {
       const ingredients = await Ingredient.find().exec();
-      return res.status(200).json(ingredients);
+      return res.status(200).json({
+        results: ingredients,
+        count: count,
+      });
     }
   } catch (err) {
     console.error(err);
